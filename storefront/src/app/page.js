@@ -4,82 +4,15 @@ import Header from '../components/Header';
 import ProductGrid from '../components/ProductGrid';
 import { motion } from 'framer-motion';
 
-const MOCK_PRODUCTS = [
-  {
-    id: 1,
-    title: "Mavi Kristal Çiçek Bahçesi",
-    category: "RUB ON TRANSFER",
-    price: "185",
-    sku: "GZP-FLW-001",
-    image: "/uploaded-products/blue-flowers.jpg",
-    isNew: true
-  },
-  {
-    id: 2,
-    title: "Dört Mevsim Hobi Kutusu",
-    category: "RUB ON TRANSFER",
-    price: "210",
-    sku: "GZP-BOX-002",
-    image: "/uploaded-products/hobby-boxes.jpg",
-    isNew: true
-  },
-  {
-    id: 3,
-    title: "Zarif Küpe Çiçeği (Fuchsia)",
-    category: "RUB ON TRANSFER",
-    price: "145",
-    sku: "GZP-FLW-003",
-    image: "/uploaded-products/fuchsia.jpg",
-    isNew: false
-  },
-  {
-    id: 4,
-    title: "Tavşanlı Sebze Sepeti İllüstrasyonu",
-    category: "RUB ON TRANSFER",
-    price: "165",
-    sku: "GZP-ANI-004",
-    image: "/uploaded-products/rabbit.jpg",
-    isNew: false
-  },
-  {
-    id: 5,
-    title: "Bahar Dalları ve Şarkı Söyleyen Kuşlar",
-    category: "RUB ON TRANSFER",
-    price: "195",
-    sku: "GZP-ANI-005",
-    image: "/uploaded-products/birds.jpg",
-    isNew: true
-  }
-];
+import productsData from '../data/products.json';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const MOCK_PRODUCTS = []; // Kept for reference if needed, but unused
 
 export default function Home() {
-  const [products, setProducts] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
+  const [products, setProducts] = React.useState(productsData);
   const [selectedCategory, setSelectedCategory] = React.useState("TÜMÜ");
 
-  React.useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const response = await fetch(`${BASE_URL}/products`);
-        const data = await response.json();
-
-        // Map relative image paths to full URLs
-        const processedData = data.map(p => ({
-          ...p,
-          image: p.image.startsWith('http') ? p.image : `${BASE_URL}${p.image}`
-        }));
-
-        setProducts(processedData);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchProducts();
-  }, []);
+  // No fetch needed for static deployment
   return (
     <main className="min-h-screen">
       <Header />
@@ -151,18 +84,12 @@ export default function Home() {
       </section>
 
       {/* Featured Products */}
-      {loading ? (
-        <div className="py-24 flex justify-center items-center">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      ) : (
-        <ProductGrid
-          products={products.filter(p => selectedCategory === "TÜMÜ" || p.category === selectedCategory)}
-          categories={["TÜMÜ", ...new Set(products.map(p => p.category))]}
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-        />
-      )}
+      <ProductGrid
+        products={products.filter(p => selectedCategory === "TÜMÜ" || p.category === selectedCategory)}
+        categories={["TÜMÜ", ...new Set(products.map(p => p.category))]}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+      />
 
       {/* Footer */}
       <footer className="border-t border-gray-100 py-16 bg-gray-50">
