@@ -4,7 +4,12 @@ import { motion } from 'framer-motion';
 import { Eye, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 
+import { useDealer } from '../context/DealerContext';
+
 export default function ProductCard({ product }) {
+    const { getPrice } = useDealer();
+    const currentPrice = getPrice(product.price);
+
     return (
         <motion.div
             className="product-card group flex flex-col"
@@ -50,8 +55,8 @@ export default function ProductCard({ product }) {
                     </h3>
                 </Link>
                 <div className="mt-3 flex flex-col items-center">
-                    <span className="text-sm font-bold text-black tracking-tight">
-                        {product.price} ₺
+                    <span className={`text-sm font-bold tracking-tight ${currentPrice === 45 ? 'text-purple' : 'text-black'}`}>
+                        {currentPrice} ₺
                     </span>
                     <span className="text-[10px] text-text-muted mt-1 uppercase tracking-widest">
                         STOK KODU: {product.sku}
