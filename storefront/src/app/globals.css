@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #eab308;
+  --color-primary-dark: #ca8a04;
+  --color-purple: #a855f7;
+  --color-purple-light: #d8b4fe;
+  --color-neon-purple: #bf00ff;
+  --color-text-main: #333333;
+  --color-text-muted: #888888;
+  --color-site-bg: #ffffff;
+  --color-card-bg: #ffffff;
+
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+  --font-pacifico: var(--font-pacifico);
+}
+
+@keyframes neon-flicker {
+
+  0%,
+  19%,
+  21%,
+  23%,
+  25%,
+  54%,
+  56%,
+  100% {
+    text-shadow:
+      0 0 4px #fff,
+      0 0 11px #fff,
+      0 0 19px #fff,
+      0 0 40px var(--color-neon-purple),
+      0 0 80px var(--color-neon-purple),
+      0 0 90px var(--color-neon-purple),
+      0 0 100px var(--color-neon-purple),
+      0 0 150px var(--color-neon-purple);
+  }
+
+  20%,
+  24%,
+  55% {
+    text-shadow: none;
+    opacity: 0.8;
+  }
+}
+
+@keyframes intense-glow {
+  0% {
+    filter: brightness(1) drop-shadow(0 0 5px var(--color-neon-purple));
+  }
+
+  50% {
+    filter: brightness(1.8) drop-shadow(0 0 30px var(--color-neon-purple));
+  }
+
+  100% {
+    filter: brightness(1) drop-shadow(0 0 5px var(--color-neon-purple));
+  }
+}
+
+.animate-neon-purple {
+  animation: neon-flicker 3s infinite alternate;
+}
+
+.animate-intense-glow {
+  animation: intense-glow 2s ease-in-out infinite;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #333333;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif);
+}
+
+/* Custom Utilities for Atölye Güneş Style */
+.promo-bar {
+  @apply bg-primary text-black text-center py-2 text-sm font-medium tracking-wide;
+}
+
+.product-card {
+  @apply bg-white overflow-hidden transition-all duration-300;
+}
+
+.product-card:hover .product-image {
+  @apply scale-105;
+}
+
+.product-image-container {
+  @apply relative aspect-square overflow-hidden bg-gray-50;
+}
+
+.product-image {
+  @apply w-full h-full object-cover transition-transform duration-500;
+}
