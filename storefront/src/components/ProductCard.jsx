@@ -18,16 +18,38 @@ export default function ProductCard({ product }) {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
         >
-            <Link href={`/product/${product.id}`} className="product-image-container group">
+            <Link
+                href={`/product/${product.id}`}
+                className="product-image-container group relative select-none"
+                onContextMenu={(e) => e.preventDefault()}
+            >
                 {/* Product Image */}
                 <img
                     src={product.image}
                     alt={product.title}
                     className="product-image"
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()}
                 />
 
+                {/* Watermark Overlay */}
+                <div
+                    className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 select-none overflow-hidden"
+                >
+                    <div className="grid grid-cols-2 gap-x-12 gap-y-16 transform -rotate-45 text-black/10 text-[10px] md:text-xs font-bold tracking-[0.4em] uppercase whitespace-nowrap">
+                        <span>Gizep's Hobby</span>
+                        <span>Gizep's Hobby</span>
+                        <span>Gizep's Hobby</span>
+                        <span>Gizep's Hobby</span>
+                        <span>Gizep's Hobby</span>
+                        <span>Gizep's Hobby</span>
+                        <span>Gizep's Hobby</span>
+                        <span>Gizep's Hobby</span>
+                    </div>
+                </div>
+
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4">
+                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4 z-20">
                     <div className="bg-white p-3 rounded-full hover:bg-purple transition-colors duration-300 shadow-sm translate-y-4 group-hover:translate-y-0 transition-transform">
                         <Eye className="w-5 h-5 text-text-main hover:text-white" />
                     </div>

@@ -3,12 +3,11 @@ import React from 'react';
 import Header from '../components/Header';
 import ProductGrid from '../components/ProductGrid';
 import { motion } from 'framer-motion';
-
+import { useDealer } from '../context/DealerContext';
 import productsData from '../data/products.json';
 
-const MOCK_PRODUCTS = []; // Kept for reference if needed, but unused
-
 export default function Home() {
+  const { isDealer, logout, setIsLoginOpen } = useDealer();
   const [products, setProducts] = React.useState(productsData);
   const [selectedCategory, setSelectedCategory] = React.useState("TÜMÜ");
 
@@ -73,9 +72,12 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.5, type: "spring", stiffness: 100 }}
           >
-            <button className="mt-12 group relative bg-white overflow-hidden py-5 px-12 transition-all duration-300">
+            <button
+              onClick={() => isDealer ? logout() : setIsLoginOpen(true)}
+              className="mt-12 group relative bg-white overflow-hidden py-5 px-12 transition-all duration-300"
+            >
               <span className="relative z-10 text-black font-black text-sm tracking-widest uppercase group-hover:text-white transition-colors duration-300">
-                FABRİKAYA GİRİŞ YAP
+                {isDealer ? 'ÇIKIŞ YAP' : 'BAYİ GİRİŞ YAP'}
               </span>
               <div className="absolute inset-0 bg-purple translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
             </button>

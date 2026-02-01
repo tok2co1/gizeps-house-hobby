@@ -6,15 +6,13 @@ import { ShoppingBag, Search, User, Menu } from 'lucide-react';
 import { useDealer } from '../context/DealerContext';
 
 export default function Header() {
-    const { isDealer, login, logout } = useDealer();
-    const [isLoginOpen, setIsLoginOpen] = React.useState(false);
+    const { isDealer, login, logout, isLoginOpen, setIsLoginOpen } = useDealer();
     const [password, setPassword] = React.useState('');
     const [error, setError] = React.useState('');
 
     const handleLogin = (e) => {
         e.preventDefault();
         if (login(password)) {
-            setIsLoginOpen(false);
             setPassword('');
             setError('');
         } else {

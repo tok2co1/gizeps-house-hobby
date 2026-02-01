@@ -6,6 +6,7 @@ const DealerContext = createContext();
 export function DealerProvider({ children }) {
     const [isDealer, setIsDealer] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoginOpen, setIsLoginOpen] = useState(false);
 
     // Check localStorage on mount
     useEffect(() => {
@@ -20,6 +21,7 @@ export function DealerProvider({ children }) {
         if (password === 'bayi123') {
             setIsDealer(true);
             localStorage.setItem('isDealer', 'true');
+            setIsLoginOpen(false); // Close modal on success
             return true;
         }
         return false;
@@ -36,7 +38,7 @@ export function DealerProvider({ children }) {
     };
 
     return (
-        <DealerContext.Provider value={{ isDealer, login, logout, getPrice, isLoading }}>
+        <DealerContext.Provider value={{ isDealer, login, logout, getPrice, isLoading, isLoginOpen, setIsLoginOpen }}>
             {children}
         </DealerContext.Provider>
     );

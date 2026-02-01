@@ -5,35 +5,22 @@ import { motion } from 'framer-motion';
 import { ShoppingCart, ArrowLeft, ShieldCheck, Truck, RefreshCcw } from 'lucide-react';
 import Link from 'next/link';
 
-const BASE_URL = "http://localhost:8000";
+import productsData from '../../../data/products.json';
+import { useDealer } from '../../../context/DealerContext';
 
 export default function ProductDetail({ params }) {
     const { id } = React.use(params);
+    const { getPrice } = useDealer();
     const [product, setProduct] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
-        async function fetchProduct() {
-            try {
-                const response = await fetch(`${BASE_URL}/product/${id}`);
-                const data = await response.json();
-
-                if (data.error) throw new Error(data.error);
-
-                // Map relative image paths to full URLs
-                const processedProduct = {
-                    ...data,
-                    image: data.image.startsWith('http') ? data.image : `${BASE_URL}${data.image}`
-                };
-
-                setProduct(processedProduct);
-            } catch (error) {
-                console.error("Error fetching product:", error);
-            } finally {
-                setLoading(false);
-            }
+        // Find product in local JSON
+        const foundProduct = productsData.find(p => p.id === parseInt(id) || p.id === id);
+        if (foundProduct) {
+            setProduct(foundProduct);
         }
-        fetchProduct();
+        setLoading(false);
     }, [id]);
 
     if (loading) {
@@ -47,13 +34,15 @@ export default function ProductDetail({ params }) {
     if (!product) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-                <h2 className="text-2xl font-bold mb-4">Ürün Bulunamadı</h2>
-                <Link href="/" className="text-purple hover:underline flex items-center gap-2">
+                <h2 className="text-2xl font-bold mb-4 uppercase tracking-tighter">Ürün Bulunamadı</h2>
+                <Link href="/" className="text-purple hover:underline flex items-center gap-2 font-bold text-xs uppercase tracking-widest">
                     <ArrowLeft className="w-4 h-4" /> Mağazaya Dön
                 </Link>
             </div>
         );
     }
+
+    const currentPrice = getPrice(product.price);
 
     return (
         <main className="min-h-screen bg-white">
@@ -69,13 +58,28 @@ export default function ProductDetail({ params }) {
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="bg-gray-50 rounded-3xl overflow-hidden aspect-square flex items-center justify-center p-8 sticky top-32"
+                        className="bg-gray-50 rounded-3xl overflow-hidden aspect-square flex items-center justify-center p-8 sticky top-32 relative select-none"
                     >
                         <img
                             src={product.image}
                             alt={product.title}
-                            className="w-full h-full object-contain mix-blend-multiply transition-transform duration-700 hover:scale-110"
+                            className="w-full h-full object-contain mix-blend-multiply transition-transform duration-700 hover:scale-110 relative z-0"
+                            draggable="false"
+                            onContextMenu={(e) => e.preventDefault()}
                         />
+                        {/* Watermark Overlay */}
+                        <div
+                            className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 select-none overflow-hidden"
+                        >
+                            <div className="grid grid-cols-2 gap-x-20 gap-y-24 transform -rotate-45 text-black/10 text-xl md:text-3xl font-bold tracking-[0.5em] uppercase whitespace-nowrap">
+                                <span>Gizep's Hobby</span>
+                                <span>Gizep's Hobby</span>
+                                <span>Gizep's Hobby</span>
+                                <span>Gizep's Hobby</span>
+                                <span>Gizep's Hobby</span>
+                                <span>Gizep's Hobby</span>
+                            </div>
+                        </div>
                     </motion.div>
 
                     {/* Right: Info */}
@@ -86,18 +90,16 @@ export default function ProductDetail({ params }) {
                     >
                         <span
                             className="text-xs font-bold text-purple uppercase tracking-[0.3em] mb-4"
-                            style={{ fontFamily: 'var(--font-pacifico)' }}
                         >
-                            {product.category}
+                            {product.category || "RUB ON TRANSFER"}
                         </span>
                         <h1
-                            className="text-4xl md:text-6xl font-bold text-text-main leading-tight mb-6"
-                            style={{ fontFamily: 'var(--font-pacifico)' }}
+                            className="text-4xl md:text-6xl font-bold text-text-main leading-tight mb-6 italic"
                         >
                             {product.title}
                         </h1>
-                        <p className="text-2xl font-bold text-black mb-8">
-                            {product.price} ₺
+                        <p className={`text-4xl font-bold mb-8 ${currentPrice === 45 ? 'text-purple' : 'text-black'}`}>
+                            {currentPrice} ₺
                         </p>
 
                         <div className="prose prose-sm text-text-muted mb-10 leading-relaxed">
